@@ -1,28 +1,26 @@
-from flask_login import UserMixin
-from Dublin_Bikes import db
+from Dublin_Bikes import Base
+from sqlalchemy import Column, Integer, String, Float, Boolean
+
     
-class Static(UserMixin, db.Model):
+class Static(Base):
     """
     Create an Stations table
     """
     __tablename__ = 'Stations'
     
-    number = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String (100), nullable=False)
-    address = db.Column(db.String (100), nullable=False)
-    location_latitude = db.Column(db.Float, nullable=False)
-    location_longitude = db.Column(db.Float, nullable=False)
-    banking = db.Column(db.Boolean, nullable=False)
-    bonus = db.Column(db.Boolean, nullable=False)
-    
-    def __init__(self, number=None, name=None, address=None, location_latitude=None, location_longitude=None, banking=None, bonus=None):
-        self.number = number
-        self.name = name
-        self.address = address
-        self.location_latitude = location_latitude
-        self.location_longitude = location_longitude
-        self. banking = banking
-        self.bonus = bonus
+    address = Column(String (100), nullable=False)
+    available_bike_stands = Column(Integer, nullable=False)
+    available_bikes = Column(Integer, nullable=False)
+    banking = Column(Boolean, nullable=False)
+    bike_stands = Column(Integer, nullable=False)
+    bonus = Column(Boolean, nullable=False)
+    contract_name = Column(String (100), nullable=False)
+    last_update = Column(Integer, nullable=False)
+    name = Column(String (100), nullable=False)
+    number = Column(Integer, primary_key=True, nullable=False)
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
+    status = Column(String (100), nullable=False)
     
     def __repr__(self):
         return '<Static: {}>'.format(self.name)
