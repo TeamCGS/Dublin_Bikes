@@ -9,11 +9,46 @@ import datetime
 import time 
 
 from dataScraperBase import data_Base
+import csv
 
-
+class ReallyStatic(data_Base):
+    """
+    Create a static data table
+    """
+    __tablename__ = 'Static Data'
+    
+    number = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String (100), nullable=False)
+    address = Column(String (100), nullable=False)
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
+    
+    def getData(self):
+        
+        engine = create_engine('mysql+mysqlconnector://CGSdatabase:password@dublinbikes.ctaptplk7c5t.eu-west-1.rds.amazonaws.com/dublinbikes', convert_unicode=True)
+        Session = sessionmaker(bind=engine)
+        session = Session()  
+        data_Base.metadata.create_all(bind=engine)
+        
+        file = open('Dublin.csv', 'r')
+        reader = csv.reader(file)
+        for row in reader:
+            now = datetime.datetime.now() 
+            print(row)
+            staticData = ReallyStatic(number=row[0],
+                                      name=row[1],
+                                      address=row[2],
+                                      lat=row[3],
+                                      lng=row[4])
+            
+            session.add(staticData)
+            session.commit()
+            
+        session.close()
+        
 class Static(data_Base):
     """
-    Create an Stations table
+    Create a dynamic data table
     """
     __tablename__ = 'Stations'
     
@@ -67,12 +102,10 @@ class Static(data_Base):
      
     def writeToDatabase(self,session,data1): 
         self.data = data1
-        print("vdfjvwjvfkwhkfbew",self.data)
         print("entering write to database")     
         for i in self.data:
             
             now = datetime.datetime.now() 
-            print(i)
             station = Static(address=i["address"],
                                         available_bike_stands=i["available_bike_stands"],
                                         available_bikes=i["available_bikes"],
@@ -88,10 +121,10 @@ class Static(data_Base):
                                         status=i["status"],
                                         timeDate=now)
             
-            print("++++++")
+    
             session.add(station)
             session.commit()
-            print("------")
-        #session.close()
+            
+        session.close()
             
         return 
