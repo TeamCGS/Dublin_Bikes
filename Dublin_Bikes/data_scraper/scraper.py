@@ -111,7 +111,7 @@ class Dynamic(data_Base):
                 
                 self.writeToDatabase(engine,session,data,setOfNumbers)
                 self.joiningTable(session,engine)
-                time.sleep(1*10)
+                time.sleep(5*60)
            
             except:
                 if engine is None:
