@@ -1,6 +1,6 @@
 import json
 import requests
-from sqlalchemy import Column, Integer, String, Float, Boolean
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from pprint import pprint
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -8,7 +8,6 @@ import datetime
 import time 
 from dataScraperBase import data_Base
 import csv
-from sqlalchemy.sql.schema import ForeignKey
 from werkzeug.contrib.profiler import available
 
 class ReallyStatic(data_Base):
@@ -112,7 +111,7 @@ class Dynamic(data_Base):
                 
                 self.writeToDatabase(engine,session,data,setOfNumbers)
                 self.joiningTable(session,engine)
-                time.sleep(5*60)
+                time.sleep(1*10)
            
             except:
                 if engine is None:
@@ -128,10 +127,11 @@ class Dynamic(data_Base):
         
         self.data = data1
         self.numberIds = numberSet
-        #print("entering write to database")     
+        print("entering write to database")     
         engine.execute("TRUNCATE TABLE dublinbikes.Stations") #removes exsisting data from the database
         
         for i in self.data:
+            print(i["number"])
             now = datetime.datetime.now()
             if i["number"] not in self.numberIds:
                 self.numberIds.add(i["number"])
@@ -175,11 +175,11 @@ class Dynamic(data_Base):
         return 
     
     def joiningTable(self,session,e):
-        #print("joing table") 
+        print("joing table") 
         engine = e
         result = engine.execute("SELECT address, available_bike_stands, available_bikes, banking, bike_stands, last_update, name, Static_Data.number, lat, lng, status, timeDate  FROM Stations JOIN Static_Data ON Static_Data.number = Stations.number")
         for x in result:
-
+            print(x)
             joined_tables = JoinedTables(address=x[0],
                                             available_bike_stands= int(x[1]),
                                             available_bikes=int(x[2]),
@@ -195,7 +195,9 @@ class Dynamic(data_Base):
             
             
             session.add(joined_tables)
+            print("d")
             session.commit()
+            print("...........")
         
           
         return
