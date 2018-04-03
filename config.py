@@ -17,6 +17,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     DEBUG_TB_ENABLED = True
     SQLALCHEMY_ECHO = True
+    SEND_FILE_MAX_AGE_DEFAULT = 0 #to prevent browser from caching data during development when you want to see changes
 
 class ProductionConfig(Config):
     """
