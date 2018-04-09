@@ -21,6 +21,7 @@ class Weather(Base):
     temp_max = Column(Integer, nullable=False)
     temp_min = Column(Integer, nullable=False)
     description = Column(String(100), nullable = False)
+    icon = Column(String(100), nullable = False)
     main_description = Column(String(100), nullable = False)
     timeDate = Column(String (100), primary_key=True, nullable=False)
     
@@ -42,7 +43,7 @@ class Weather(Base):
                 #pprint(r)
             
                 data = r.json()
-                pprint(data)
+                #pprint(data)
                 self.writeToDatabase(weather_engine,talk_session,data)
                 time.sleep(30*60)
                 
@@ -65,6 +66,7 @@ class Weather(Base):
                                     temp_min=self.data["main"]["temp_min"],
                                     temp=self.data["main"]["temp"],
                                     description=self.data["weather"][0]["description"],
+                                    icon=self.data["weather"][0]["icon"],
                                     main_description=self.data["weather"][0]["main"],
                                     timeDate=now)
     
