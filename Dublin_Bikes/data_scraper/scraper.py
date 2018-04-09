@@ -14,7 +14,7 @@ class ReallyStatic(data_Base):
     """
     Create a static data table
     """
-    __tablename__ = 'Static_Data'
+    __tablename__ = 'Static_Data1'
     
     number = Column(Integer, primary_key=True, nullable=False)
     name = Column(String (100), nullable=False)
@@ -55,7 +55,7 @@ class ReallyStatic(data_Base):
 
         
 class JoinedTables(data_Base):
-    __tablename__ = 'JoinedTable'
+    __tablename__ = 'JoinedTable1'
     
     number = Column(Integer, primary_key=True, nullable=False)
     name = Column(String (100), nullable=False)
@@ -78,7 +78,7 @@ class Dynamic(data_Base):
     """
     Create a dynamic data table
     """
-    __tablename__ = 'Stations'
+    __tablename__ = 'Stations1'
     
     
     available_bike_stands = Column(Integer, nullable=False)
@@ -128,7 +128,7 @@ class Dynamic(data_Base):
         self.data = data1
         self.numberIds = numberSet
         #print("entering write to database")     
-        engine.execute("TRUNCATE TABLE dublinbikes.Stations") #removes exsisting data from the database
+        engine.execute("TRUNCATE TABLE dublinbikes.Stations1") #removes exsisting data from the database
         
         for i in self.data:
             #print(i["number"])
@@ -177,7 +177,7 @@ class Dynamic(data_Base):
     def joiningTable(self,session,e):
         #print("joing table") 
         engine = e
-        result = engine.execute("SELECT address, available_bike_stands, available_bikes, banking, bike_stands, last_update, name, Static_Data.number, lat, lng, status, timeDate  FROM Stations JOIN Static_Data ON Static_Data.number = Stations.number")
+        result = engine.execute("SELECT address, available_bike_stands, available_bikes, banking, bike_stands, last_update, name, Static_Data1.number, lat, lng, status, timeDate  FROM Stations1 JOIN Static_Data1 ON Static_Data1.number = Stations1.number")
         for x in result:
             
             joined_tables = JoinedTables(address=x[0],
