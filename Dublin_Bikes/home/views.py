@@ -28,4 +28,14 @@ def get_stations():
     stations = []
     for row in rows:
         stations.append(dict(row))
+    return jsonify(stations=stations)
+
+@home.route('/station_availability') 
+def get_dynamic_data(): 
+    conn = get_db()
+    sql = "select * from Stations;"
+    rows = conn.execute(sql).fetchall()
+    stations = []
+    for row in rows:
+        stations.append(dict(row))
     return jsonify(stations=stations) 
