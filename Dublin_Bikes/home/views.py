@@ -23,17 +23,17 @@ def homepage():
 @home.route('/stations') 
 def get_stations(): 
     conn = get_db()
-    sql = "select * from Static_Data;"
+    sql = "select * from Static_Data1;"
     rows = conn.execute(sql).fetchall()
     stations = []
     for row in rows:
         stations.append(dict(row))
     return jsonify(stations=stations)
 
-@home.route('/station_availability') 
-def get_dynamic_data(): 
+@home.route('/station_availability/<station_number>') 
+def get_dynamic_data(station_number):
     conn = get_db()
-    sql = "select * from Stations;"
+    sql = "select * from Stations1 where number="+station_number+";"
     rows = conn.execute(sql).fetchall()
     stations = []
     for row in rows:
