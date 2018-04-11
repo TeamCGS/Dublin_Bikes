@@ -18,16 +18,11 @@
                        title : station.name,
                        station_number : station.number
                     });
-                
-//                infowindow  = new google.maps.InfoWindow();
-//                contentString = '<div id="content" class="stationInfoTitle"><h2 class="stationTitle">' + station.name + '</h2></div>'+ '<div id='+ station.number +' class="stationAvailabitlyInfo"></div>';
-//                infowindow.setContent(contentString);
                 marker.addListener("click", function() {
 //                    var stationNumber = station.number;
 //                    console.log(stationNumber);
                     dynamicStationData(this);
-                    
-                    //drawStationCharts(this);
+                    drawStationCharts(this);
                     //drawStationChartsWeekly(this); });
                 }) 
             })
@@ -43,18 +38,48 @@ function dynamicStationData(marker) {
             var contentString = '<div id="content" class="stationInfoTitle"><h2 class="stationTitle">' + marker.title + '</h2><ul class="bikeInfo"><li>Available Bike Stands: ' + dynamicData[0].available_bike_stands + '</li><li>Available Bikes: ' + dynamicData[0].available_bikes + '</li><li>Banking Available: ' + dynamicData[0].banking + '</li><li>Number of Bike Stands: ' + dynamicData[0].bike_stands + '</li></ul></div>;';
             infowindow.setContent(contentString);
             infowindow.open(marker.map, marker);
-            
-            
-//            
-//            _.forEach(stations, function(station) {
-//                console.log(station.available_bike_stands, station.available_bikes);
-//                console.log(stationNumber);
-//                contentString = "<ul class='bikeInfoList'><li>Available Bike Stands: " + station.available_bike_stands + "</li><li>Available Bikes: " + station.available_bikes + "</li><li>Banking Available: " + station.banking + "</li><li>Number of Bike Stands: " + station.bike_stands + "</li></ul>";
-//                document.getElementById(station.number).innerHTML = contentString;
-//            })
         }
     })
 }
+
+function drawStationCharts(marker){
+    $.getJSON("/occupancy/" + marker.station_number, function (data) {
         
+        data = JSON.parse(data.data); 
+//        console.log('data', data);  
+//        var x = document.getElementById('graphs');
+//        if (x.style.display === "none") {
+//            x.style.display = "block";
+//        }
+        
+        var chart = new google.visualization.ColumnChart(document.getElementById('graphs'));
+        
+        var chart_data = new google.visualization.DataTable(); 
+        chart_data.addColumn('datetime', 'Time of Day'); 
+        chart_data.addColumn('number', '#');
+        
+        _.forEach(data, function (row) {
+            chart_data.addRow([new Date(row[0]), row[1]]); 
+        });
+        
+        var options = {
+            title: 'Availability',
+            colors: ['#9575cd', '#33ac71'],
+            hAxis: {
+                title: 'Time of Day', format: "E HH:mm", slantedText: true, slantedTextAngle: 30,
+            }, 
+            vAxis: {
+                title: 'Average Number of Available Stands' }
+            };
+        
+        chart.draw(chart_data, options);
+        
+    }).fail(function () {
+        console.log("error"); 
+    })
+}
+
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawStationCharts);
 myMap()
 

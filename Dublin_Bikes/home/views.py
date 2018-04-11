@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify, g
 from . import home
 from sqlalchemy import create_engine
+import pandas as pd
+import json
 
 def connect_to_database():
         engine = create_engine('mysql+mysqlconnector://CGSdatabase:password@dublinbikes.ctaptplk7c5t.eu-west-1.rds.amazonaws.com/dublinbikes', convert_unicode=True)
@@ -38,4 +40,20 @@ def get_dynamic_data(station_number):
     stations = []
     for row in rows:
         stations.append(dict(row))
-    return jsonify(stations=stations) 
+    return jsonify(stations=stations)
+
+@home.route('/occupancy/<station_number>') 
+def get_occupancy_data(station_number):
+    conn = get_db()
+    params = {"number": station_number}
+    sql = '''
+       select timeDate, available_bike_stands
+       from JoinedTable1
+       where number = {number}
+       order by timeDate
+   '''.format(**params)
+    df = pd.read_sql_query(sql, conn)
+    df['last_update_date'] = pd.to_datetime(df.timeDate, format='%Y-%m-%d %H:%M:%S.%f')
+    df.set_index('last_update_date', inplace=True)
+    res = df['available_bike_stands'].resample('1d').mean()
+    return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
