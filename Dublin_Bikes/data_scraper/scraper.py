@@ -55,7 +55,7 @@ class ReallyStatic(data_Base):
 
         
 class JoinedTables(data_Base):
-    __tablename__ = 'JoinedTable1'
+    __tablename__ = 'JoinedTable2'
     
     number = Column(Integer, primary_key=True, nullable=False)
     name = Column(String (100), nullable=False)

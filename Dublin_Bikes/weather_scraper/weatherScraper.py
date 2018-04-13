@@ -12,7 +12,7 @@ class Weather(Base):
     """
     Create a Weather table
     """
-    __tablename__ = 'weather'
+    __tablename__ = 'weather1'
     
     id = Column(Integer, nullable=False, primary_key ='True')
     name = Column(String(100), nullable = False)
