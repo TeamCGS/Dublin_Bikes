@@ -80,7 +80,7 @@ def get_AvailableBikesOccupancy_data(station_number):
 @home.route('/weather') 
 def get_weather():
     conn = get_db()
-    sql = "SELECT * FROM (SELECT * FROM weather ORDER BY timeDate DESC LIMIT 1 ) T1 ORDER BY timeDate"
+    sql = "SELECT * FROM (SELECT * FROM weather1 ORDER BY timeDate DESC LIMIT 1 ) T1 ORDER BY timeDate"
     rows = conn.execute(sql).fetchall()
     weather = []
     for row in rows:
