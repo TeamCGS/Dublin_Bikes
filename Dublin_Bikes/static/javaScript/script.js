@@ -1,4 +1,5 @@
-   function myMap(){
+//Function to create map and lister on markers to call functions to draw charts
+function myMap(){
     var mapProp= {
         center:new google.maps.LatLng(53.34745126358793,-6.259031293276394), zoom:13,
     };
@@ -30,12 +31,18 @@
     }})   
 }
 
+//function to create info window for markers
 function dynamicStationData(marker) {
 //    console.log('get station data', marker);
     $.getJSON('/station_availability/' + marker.station_number, null, function(data) {
+        if(prev_info_window){
+            prev_info_window.close()
+        }
+        
         if ('stations' in data) {
             var dynamicData = data.stations
             var infowindow  = new google.maps.InfoWindow();
+            prev_info_window = infowindow;
             if (dynamicData[0].banking == 0){
                     var banking = "No"
                 }
@@ -50,6 +57,7 @@ function dynamicStationData(marker) {
     })
 }
 
+//function to draw chart
 function drawAvailableBikeStands(marker){
     $.getJSON("/occupancyOfAvailableBikeStands/" + marker.station_number, function (data) {
         
@@ -88,8 +96,9 @@ function drawAvailableBikeStands(marker){
     })
 }
 
+//function to draw chart
 function drawAvailableBikes(marker){
-    $.getJSON("/occupancyOfAvailableBikesByHour/" + marker.station_number, function (data) {
+    $.getJSON("/occupancyOfAvailableBikes/" + marker.station_number, function (data) {
         
         data = JSON.parse(data.data); 
 //        console.log('data', data);  
@@ -126,6 +135,7 @@ function drawAvailableBikes(marker){
     })
 }
 
+//function to close charts div
 function closeCharts() {
     var x = document.getElementById("chartsDiv");
     if (x.style.display === "none") {
@@ -136,5 +146,50 @@ function closeCharts() {
     }
 }
 
+//function to display information message upon loading page
+function codeAddress() {
+    alert('Welcome to DublinBikes. This web application is designed to provde you with real time information on DublinBikes, such as, the current number of bikes at a given station and the number of available bike stands at a station. We also provie you with predictions for the number of bikes available for a given day. Enjoy.\n\n To continue please hit CLOSE below ');
+}
+
+//function to display weather information
+function weather(){
+    //console.log("Entered weather function")
+    $.getJSON("/weather", null, function (data){
+        if ('weather' in data){
+            var weather = data.weather
+        }
+        
+        _.forEach(weather, function(weather) {     
+       var weatherInfo = "<table>";
+            
+       weatherInfo += "<tr><th> Icon </th><th>Description</th><th> Temp Max </th><th>Temp Min</th><th>Humidity</th></tr>";
+            
+            
+        var tempMax = weather.temp_max;                    
+        var tempMin = weather.temp_min;
+        var Descrip = weather.description;                   var iconCode = weather.icon;
+        var humidity = weather.humidity;
+        
+        //console.log(tempMax, tempMin, Descrip, iconCode, humidity )
+        
+        weatherInfo += "<tr><td>" + "<img src='http://openweathermap.org/img/w/" + iconCode + ".png'>" + "</td><td>" + Descrip + "</td><td>" + tempMax + 'K' + "</td><td>" + tempMin + 'K' + "</td><td>" + humidity + "</td><\tr>";
+
+        weatherInfo += "</table>";                   
+        document.getElementById("weather").innerHTML = weatherInfo;
+        
+        
+        })
+    })
+}
+
+var prev_info_window = false;
+window.onload = codeAddress;
+weather()
+//Updates weather info over time
+setInterval(function(){
+            weather()},1800000)
+
+//Loads google charts library
 google.charts.load('current', {packages: ['corechart']});
+//When google charts library is loaded my map function is called
 google.charts.setOnLoadCallback(myMap);

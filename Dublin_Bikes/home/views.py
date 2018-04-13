@@ -60,7 +60,7 @@ def get_AvailableBikeStandsOccupancy_data(station_number):
 #     print(res)
     return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
 
-@home.route('/occupancyOfAvailableBikesByHour/<station_number>') 
+@home.route('/occupancyOfAvailableBikes/<station_number>') 
 def get_AvailableBikesOccupancy_data(station_number):
     conn = get_db()
     params = {"number": station_number}
@@ -76,3 +76,14 @@ def get_AvailableBikesOccupancy_data(station_number):
     res = df['available_bikes'].resample('1d').mean()
     
     return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
+
+@home.route('/weather') 
+def get_weather():
+    conn = get_db()
+    sql = "SELECT * FROM (SELECT * FROM weather ORDER BY timeDate DESC LIMIT 1 ) T1 ORDER BY timeDate"
+    rows = conn.execute(sql).fetchall()
+    weather = []
+    for row in rows:
+        print(row)
+        weather.append(dict(row))
+    return jsonify(weather=weather)
