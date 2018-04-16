@@ -22,23 +22,12 @@ def homepage():
     
     return render_template('home/index.html', title="Welcome") 
           
-# @home.route('/stations') 
-# def get_stations(): 
-#     conn = get_db()
-#     sql = "select * from Static_Data1;"
-#     rows = conn.execute(sql).fetchall()
-#     stations = []
-#     for row in rows:
-#         stations.append(dict(row))
-#     return jsonify(stations=stations)
-
-
 
 # changed stations to get up to date data aswell so the markers can be populated with different colors
 @home.route('/stations') 
 def get_stations(): 
     conn = get_db()
-    sql = "SELECT * from Static_Data1 JOIN Stations1 Where Static_Data1.number = Stations1.number;"
+    sql = "SELECT * from Static_Data JOIN Stations Where Static_Data.number = Stations.number;"
     rows = conn.execute(sql).fetchall()
     stations = []
     for row in rows:
@@ -51,7 +40,7 @@ def get_stations():
 @home.route('/station_availability/<station_number>') 
 def get_dynamic_data(station_number):
     conn = get_db()
-    sql = "select * from Stations1 where number="+station_number+";"
+    sql = "select * from Stations where number="+station_number+";"
     rows = conn.execute(sql).fetchall()
     stations = []
     for row in rows:
