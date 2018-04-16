@@ -198,11 +198,8 @@ p.copyright {
     overflow: hidden;
 }
 #weather{
-    width: 20%;
-    height: 40%;
-    border: 1px solid orange;
-    float: right;
-    overflow:hidden;
+    display: none;
+    justify-content: center;
 }
 #directions{
     width: 40%;
