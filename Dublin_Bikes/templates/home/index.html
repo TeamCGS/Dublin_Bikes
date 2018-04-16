@@ -15,11 +15,14 @@
  <div id="chartsDiv" class="chartsContainer">
 
     <div class="btn-group changeButtonStyles myDiv" data-toggle="buttons">
-        <label class="btn btn-primary active">
-            <input type="radio" name="options" id="option1" autocomplete="off" checked>Average Demand
+        <label class="btn btn-primary active" id="day">
+            <input type="radio" name="options" id="option1" autocomplete="off" onclick="changeToDayView()">Average Daily Demand
         </label>
-        <label class="btn btn-primary myButton">
-            <input type="radio" name="options" id="option2" autocomplete="off" >Predicted Demand
+        <label class="btn btn-primary deactive" id="hour">
+            <input type="radio" name="options" id="option2" autocomplete="off" onclick="changeToHourView()">Predicted Hourly Demand
+        </label>
+        <label class="btn btn-primary deactive" id="predict">
+            <input type="radio" name="options" id="option3" autocomplete="off" onclick="changeToPredictionView()">Predicted Demand
         </label>
     </div>
     <div class="chartsContainer2">

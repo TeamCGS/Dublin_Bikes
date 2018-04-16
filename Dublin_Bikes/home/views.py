@@ -58,8 +58,8 @@ def get_dynamic_data(station_number):
         stations.append(dict(row))
     return jsonify(stations=stations)
 
-@home.route('/occupancyOfAvailableBikeStands/<station_number>') 
-def get_AvailableBikeStandsOccupancy_data(station_number):
+@home.route('/occupancyOfAvailableBikeStandsDaily/<station_number>') 
+def get_AvailableBikeStandsOccupancy_dataDaily(station_number):
     conn = get_db()
     params = {"number": station_number}
     sql = '''
@@ -76,8 +76,26 @@ def get_AvailableBikeStandsOccupancy_data(station_number):
 #     print(res)
     return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
 
-@home.route('/occupancyOfAvailableBikes/<station_number>') 
-def get_AvailableBikesOccupancy_data(station_number):
+@home.route('/occupancyOfAvailableBikeStandsHourly/<station_number>') 
+def get_AvailableBikeStandsOccupancy_dataHourly(station_number):
+    conn = get_db()
+    params = {"number": station_number}
+    sql = '''
+       select timeDate, available_bike_stands
+       from JoinedTable
+       where number = {number}
+       order by timeDate
+   '''.format(**params)
+    df = pd.read_sql_query(sql, conn)
+    df['last_update_date'] = pd.to_datetime(df.timeDate, format='%Y-%m-%d %H:%M:%S.%f')
+    df.set_index('last_update_date', inplace=True)
+    res = df['available_bike_stands'].resample('1h').mean()
+    
+#     print(res)
+    return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
+
+@home.route('/occupancyOfAvailableBikesDaily/<station_number>') 
+def get_AvailableBikesOccupancy_dataDaily(station_number):
     conn = get_db()
     params = {"number": station_number}
     sql = '''
@@ -90,6 +108,23 @@ def get_AvailableBikesOccupancy_data(station_number):
     df['last_update_date'] = pd.to_datetime(df.timeDate, format='%Y-%m-%d %H:%M:%S.%f')
     df.set_index('last_update_date', inplace=True)
     res = df['available_bikes'].resample('1d').mean()
+    
+    return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
+
+@home.route('/occupancyOfAvailableBikesHourly/<station_number>') 
+def get_AvailableBikesOccupancy_dataHourly(station_number):
+    conn = get_db()
+    params = {"number": station_number}
+    sql = '''
+       select timeDate, available_bikes
+       from JoinedTable
+       where number = {number}
+       order by timeDate
+   '''.format(**params)
+    df = pd.read_sql_query(sql, conn)
+    df['last_update_date'] = pd.to_datetime(df.timeDate, format='%Y-%m-%d %H:%M:%S.%f')
+    df.set_index('last_update_date', inplace=True)
+    res = df['available_bikes'].resample('1h').mean()
     
     return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
 

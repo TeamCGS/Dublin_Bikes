@@ -150,11 +150,26 @@ function myMap() {
                     setTimeout(function() {
                         marker.setAnimation(null)
                     }, 3000);
-
+                    
                     dynamicStationData(this);
-                    drawAvailableBikeStands(this);
-                    drawAvailableBikes(this);
-                    //drawStationChartsWeekly(this); });
+                    
+                    var x = document.getElementById("day");
+                    var y = document.getElementById("predict");
+                    var z = document.getElementById("hour");
+                    
+                     if ( x.classList.contains('active') ){
+                        drawAvailableBikeStandsDaily(this);
+                        drawAvailableBikesDaily(this);
+                    }
+//                    else if ( y.classList.contains('active') ){
+//                        drawAvailableBikeStandsPredict(this);
+//                        drawAvailableBikesPredict(this);
+//                    }
+                    else if ( z.classList.contains('active') ){
+                        drawAvailableBikeStandsHourly(this);
+                        drawAvailableBikesHourly(this);
+                    }
+                    
                 })
             })
 
@@ -198,7 +213,7 @@ function dynamicStationData(marker) {
 
             };
 
-            var contentString = '<div id="content" class="stationInfoTitle"><h2 class="stationTitle">' + marker.title + '</h2><ul class="bikeInfo"><li>Available Bike Stands: ' + dynamicData[0].available_bike_stands + '</li><li>Available Bikes: ' + dynamicData[0].available_bikes + '</li><li>Banking Available: ' + banking + '</li><li>Number of Bike Stands: ' + dynamicData[0].bike_stands + '</li> </ul><div id="geo"><input type="button" id="nodeGoto" value="Click Here for Directions"/></div></div>';
+            var contentString = '<div id="content" class="stationInfoTitle"><h2 class="stationTitle">' + marker.title + '</h2><ul class="bikeInfo"><li>Available Bike Stands: ' + dynamicData[0].available_bike_stands + '</li><li>Available Bikes: ' + dynamicData[0].available_bikes + '</li><li>Banking Available: ' + banking + '</li><li>Number of Bike Stands: ' + dynamicData[0].bike_stands + '</li><li><div id="geo"><input type="button" id="nodeGoto" value="Click Here for Directions"/></div></li></ul></div>';
             
                 //only shows the directions button if the user has enabled geolocation.
 
@@ -262,8 +277,8 @@ function Directions(m) {
 
 
 //function to draw chart
-function drawAvailableBikeStands(marker) {
-    $.getJSON("/occupancyOfAvailableBikeStands/" + marker.station_number, function(data) {
+function drawAvailableBikeStandsDaily(marker) {
+    $.getJSON("/occupancyOfAvailableBikeStandsDaily/" + marker.station_number, function(data) {
 
         data = JSON.parse(data.data);
         //        console.log('data', data);  
@@ -286,8 +301,51 @@ function drawAvailableBikeStands(marker) {
             title: 'Available Stands by Day',
             colors: ['#ffe038', '#33ac71'],
             hAxis: {
-                title: 'Time of Day',
+                title: 'Day',
                 format: "E",
+                slantedText: true,
+                slantedTextAngle: 30,
+            },
+            vAxis: {
+                title: 'Available Stands'
+            }
+        };
+
+        chart.draw(chart_data, options);
+        document.getElementById('googleMap').style.height = "100%";
+
+    }).fail(function() {
+        console.log("error");
+    })
+}
+
+//function to draw chart
+function drawAvailableBikeStandsHourly(marker) {
+    $.getJSON("/occupancyOfAvailableBikeStandsHourly/" + marker.station_number, function(data) {
+
+        data = JSON.parse(data.data);
+        //        console.log('data', data);  
+        //        var x = document.getElementById('graphs');
+        //        if (x.style.display === "none") {
+        //            x.style.display = "block";
+        //        }
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('graphs'));
+
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn('datetime', 'Time of Day');
+        chart_data.addColumn('number', '#');
+
+        _.forEach(data, function(row) {
+            chart_data.addRow([new Date(row[0]), row[1]]);
+        });
+
+        var options = {
+            title: 'Available Stands by Hour',
+            colors: ['#ffe038', '#33ac71'],
+            hAxis: {
+                title: 'Time of Day',
+                format: "E HH:mm",
                 slantedText: true,
                 slantedTextAngle: 30,
             },
@@ -307,8 +365,8 @@ function drawAvailableBikeStands(marker) {
 
 
 //function to draw chart
-function drawAvailableBikes(marker) {
-    $.getJSON("/occupancyOfAvailableBikes/" + marker.station_number, function(data) {
+function drawAvailableBikesDaily(marker) {
+    $.getJSON("/occupancyOfAvailableBikesDaily/" + marker.station_number, function(data) {
 
         data = JSON.parse(data.data);
         //        console.log('data', data);  
@@ -331,8 +389,52 @@ function drawAvailableBikes(marker) {
             title: 'Available Bikes by Day',
             colors: ['#9575cd', '#33ac71'],
             hAxis: {
-                title: 'Time of Day',
+                title: 'Day',
                 format: "E",
+                slantedText: true,
+                slantedTextAngle: 30,
+            },
+            vAxis: {
+                title: 'Available Bikes'
+            }
+        };
+
+        chart.draw(chart_data, options);
+        document.getElementById('chartsDiv').style.display = "inline-block";
+
+    }).fail(function() {
+        console.log("error");
+    })
+}
+
+
+//function to draw chart
+function drawAvailableBikesHourly(marker) {
+    $.getJSON("/occupancyOfAvailableBikesHourly/" + marker.station_number, function(data) {
+
+        data = JSON.parse(data.data);
+        //        console.log('data', data);  
+        //        var x = document.getElementById('graphs');
+        //        if (x.style.display === "none") {
+        //            x.style.display = "block";
+        //        }
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('graphs2'));
+
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn('datetime', 'Time of Day');
+        chart_data.addColumn('number', '#');
+
+        _.forEach(data, function(row) {
+            chart_data.addRow([new Date(row[0]), row[1]]);
+        });
+
+        var options = {
+            title: 'Available Bikes by Hour',
+            colors: ['#9575cd', '#33ac71'],
+            hAxis: {
+                title: 'Time of Day',
+                format: "E HH:mm",
                 slantedText: true,
                 slantedTextAngle: 30,
             },
@@ -427,7 +529,71 @@ function toggleMyNavBar(){
     }
 }
 
+function changeToDayView(){
+    var x = document.getElementById("day");
+    var y = document.getElementById("predict");
+    var z = document.getElementById("hour");
+    
+    if ( x.classList.contains('deactive') ){
+        x.classList.remove('deactive');
+        x.classList.add('active');
+    }
+    
+    if ( y.classList.contains('active') ){
+        y.classList.remove('active');
+        y.classList.add('deactive');
+    }
+    
+    if ( z.classList.contains('active') ){
+        z.classList.remove('active');
+        z.classList.add('deactive');
+    }
+    
+    myMap();
+}
 
+function changeToHourView(){
+    var y = document.getElementById("day");
+    var z = document.getElementById("predict");
+    var x = document.getElementById("hour");
+    
+    if ( x.classList.contains('deactive') ){
+        x.classList.remove('deactive');
+        x.classList.add('active');
+    }
+    
+    if ( y.classList.contains('active') ){
+        y.classList.remove('active');
+        y.classList.add('deactive');
+    }
+    
+    myMap();
+    
+}
+
+function changeToPredictionView(){
+    var y = document.getElementById("day");
+    var x = document.getElementById("predict");
+    var z = document.getElementById("hour");
+    
+    if ( x.classList.contains('deactive') ){
+        x.classList.remove('deactive');
+        x.classList.add('active');
+    }
+    
+    if ( y.classList.contains('active') ){
+        y.classList.remove('active');
+        y.classList.add('deactive');
+    }
+    
+    if ( z.classList.contains('active') ){
+        z.classList.remove('active');
+        z.classList.add('deactive');
+    }
+    
+//    myMap();
+    
+}
 
 var prev_info_window = false;//used to toggle open/close info_window when clicking on different markers
 var directionsWindow = false;//used to toggle open/close directions when clicking on different markers
