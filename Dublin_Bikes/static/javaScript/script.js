@@ -18,7 +18,7 @@ function myMap() {
         directionsDisplay = new google.maps.DirectionsRenderer({ //displays the directions
             map: map,
             panel: document.getElementById('directions'), //this is div where directions will be diaplyed 
-            preserveViewport: true //prevents zoom out when directions started
+            preserveViewport: false //prevents zoom out when directions started
         });
 
 
@@ -54,7 +54,7 @@ function myMap() {
     }
 
     function handleLocationError(browserHasGeolocation, info_Window, user_pos) {
-        document.getElementById('directions').innerHTML = 'Error: The Geolocation service failed.';
+        document.getElementById('directions').innerHTML = 'Sorry in order to use this feature you need to allow access to your geolocation.\nPlease change this in your browser settings and try again.';
     }
 
 
@@ -211,6 +211,8 @@ function dynamicStationData(marker) {
 
             // this can only happen if the button div is displayed (geolocation enabled)
             document.getElementById("nodeGoto").addEventListener("click", function() {
+                document.getElementById('googleMap').style.width = '60%';
+                document.getElementById('directions').style.display = 'inline-block';
                 Directions(marker);
 
             });
@@ -277,7 +279,7 @@ function drawAvailableBikeStands(marker) {
             colors: ['#ffe038', '#33ac71'],
             hAxis: {
                 title: 'Time of Day',
-                format: "E HH:mm",
+                format: "E",
                 slantedText: true,
                 slantedTextAngle: 30,
             },
@@ -322,7 +324,7 @@ function drawAvailableBikes(marker) {
             colors: ['#9575cd', '#33ac71'],
             hAxis: {
                 title: 'Time of Day',
-                format: "E HH:mm",
+                format: "E",
                 slantedText: true,
                 slantedTextAngle: 30,
             },
@@ -370,22 +372,11 @@ function weather() {
         if ('weather' in data) {
             var weather = data.weather
         }
-        
-        
-        
-        
-            
-            
-
-        
-  
-
         _.forEach(weather, function(weather) {
             
-            var weatherInfo = "<table>";
-            weatherInfo += "<tr><th> Icon </th><th>Description</th><th> Temp Max </th><th>Temp Min</th><th>Humidity</th></tr>";
-            
             var weatherInfo = "<table id ='weather_table'>";
+            weatherInfo += "<tr><th> Icon </th><th>Description</th><th> Temp Max </th><th>Temp Min</th><th>Humidity</th></tr>";
+            console.log("LOOK HERE : ", weatherInfo)
             var tempMax_temp = weather.temp_max;
             var tempMax_float = tempMax_temp - 273.15; //calculates temp in celsius
             var tempMax = Math.round(tempMax_float);

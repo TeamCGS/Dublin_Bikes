@@ -54,57 +54,13 @@ p.copyright {
     border-top: 1px solid #e7e7e7;
 }
 
-.footer, .push {
+.footer {
   clear: both;
   height: 4em;
 }
 
-.intro-divider {
-    width: 400px;
-    border-top: 1px solid #f8f8f8;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-}
-
-.intro-header {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    text-align: center;
-    color: #f8f8f8;
-    background: url(../img/intro-bg.jpg) no-repeat center center;
-    background-size: cover;
-    height: 100%;
-}
-
-.intro-message {
-    /**position: relative;**/
-    padding-top: 20%;
-    padding-bottom: 20%;
-}
-
-.intro-message > h1 {
-    margin: 0;
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-    font-size: 5em;
-}
-
-.intro-message > h3 {
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
-}
-
-.lead {
-    font-size: 18px;
-    font-weight: 400;
-}
-
 .topnav {
     font-size: 14px;
-}
-
-.wrapper {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  margin: 0 auto -4em;
 }
 
 .stationInfoTitle {
@@ -135,11 +91,15 @@ p.copyright {
 }
 
 .chartsContainer {
-    height: 300px;
+    height: 400px;
     width: 100%;
     display: none;
     margin: 0;
     padding: 0;
+}
+
+.chartsContainer2{
+    height: 400px;
 }
 
 .charts {
@@ -156,13 +116,9 @@ p.copyright {
     background-color: white;
 }
 
-/*
-#googleMap{ 
-    width:100%;
-    height:80%;
+.myDiv {
+    margin-left: 10px;
 }
-*/
-
 
 #geo{
     display : none;
@@ -178,17 +134,12 @@ p.copyright {
 
 
 /** Below is the CSS for the  **/
-#main_wrapper {
-    width: 100%;
-    height: 600px;
-    border: 1px solid black;
-    overflow: hidden; /* add this to contain floated children */
-}
+
 #googleMap {
-    width: 60%;
+    width: 100%;
     height: 100%;
-    float:left; 
-    border: 1px solid red;
+    display: inline-block;
+     margin-top: 40px;
 }
 #test {
     width:20%;
@@ -200,15 +151,16 @@ p.copyright {
 #weather{
     display: none;
     justify-content: center;
+    background-color: rgb(170, 218, 255);
 }
 #directions{
     width: 40%;
-    height: 60%;
-    border: 1px solid yellow;
+    height: 100%;
+    display: none;
     float: right;
     overflow:scroll;
+    margin-top: 40px;
 }
-
 
 #weather_table{
     
@@ -222,13 +174,14 @@ p.copyright {
 
 
 #weather_table td {
-    border: 1px solid #f8f8f8;
     padding: 2px;
 }
 
-#weather_table tr:nth-child(odd){
+/*
+#weather_table tr:nth-child(even){
     background-color: #86bdff;
 }
+*/
 
 #weather_table th:hover {
     column-span: all;

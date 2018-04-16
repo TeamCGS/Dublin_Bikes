@@ -3,32 +3,13 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block body %}
-<!---
-<div class="intro-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="intro-message">
-                    <h1>Project Dream Team</h1>
-                    <h3>The best company in the world!</h3>
-                    <hr class="intro-divider">
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="googleMap">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQzXSM-48e0tuPCN_mkdzr0ripM2ILojU"
+      type="text/javascript"></script>
+    <script type="text/javascript" src="/static/javaScript/script.js"></script>
 </div>
--->
 
-<div id = "main_wrapper"> <!-- wrapper but around the weather and googlemap, directions and test(contians current info)-->
-
-    <div id="googleMap">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQzXSM-48e0tuPCN_mkdzr0ripM2ILojU"
-          type="text/javascript"></script>
-        <script type="text/javascript" src="/static/javaScript/script.js"></script>
-    </div>
-
-    <div id = "directions"></div>
-</div>
+<div id = "directions"></div>
 
 
  <div id="chartsDiv" class="chartsContainer">
