@@ -170,11 +170,18 @@ function myMap() {
 //function to create info window for markers
 function dynamicStationData(marker) {
     $.getJSON('/station_availability/' + marker.station_number, null, function(data) {
-
-        //        this closes the marker info window if its already open however i have greyed it because ive replaced it with a div. will maybe revert back.
+                
+                //closes info_window if open when clicking on a new marker
                 if (prev_info_window) {
                     prev_info_window.close()
                 }
+        
+                //closes directions div if open when clicking on a new marker
+                if (directionsWindow) {
+                    document.getElementById('directions').style.display = 'none';
+                    document.getElementById('googleMap').style.width = '100%';
+                }
+        
 
         if ('stations' in data) {
             var dynamicData = data.stations
@@ -213,6 +220,7 @@ function dynamicStationData(marker) {
             document.getElementById("nodeGoto").addEventListener("click", function() {
                 document.getElementById('googleMap').style.width = '60%';
                 document.getElementById('directions').style.display = 'inline-block';
+                directionsWindow = true;
                 Directions(marker);
 
             });
@@ -421,7 +429,9 @@ function toggleMyNavBar(){
 
 
 
-var prev_info_window = false; //Not needed at present
+var prev_info_window = false;//used to toggle open/close info_window when clicking on different markers
+var directionsWindow = false;//used to toggle open/close directions when clicking on different markers
+
 window.onload = codeAddress;
 weather()
 
