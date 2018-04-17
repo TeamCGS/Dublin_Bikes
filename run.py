@@ -5,4 +5,5 @@ config_name = os.getenv('FLASK_CONFIG')
 app = create_app(config_name)
 
 if __name__ == '__main__':
-    app.run(ssl_context='adhoc')
+    #app.run(host ='0.0.0.0',ssl_context='adhoc',debug='True')
+    app.run(host ='0.0.0.0',ssl_context=('cert.pem', 'key.pem'))
