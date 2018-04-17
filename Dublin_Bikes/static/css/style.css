@@ -59,10 +59,6 @@ p.copyright {
   height: 4em;
 }
 
-.topnav {
-    font-size: 14px;
-}
-
 .stationTitle {
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 800;
@@ -142,7 +138,9 @@ p.copyright {
 #weather{
     display: none;
     justify-content: center;
-    background-color: rgb(170, 218, 255);
+    background-color: rgb(174, 219, 240);
+    padding-top: 15px;
+    border-bottom: 2px solid rgb(166, 200, 59);
 }
 #directions{
     width: 40%;
@@ -158,8 +156,9 @@ p.copyright {
     align-self: center;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 90%;
+    width: 50%;
     overflow: hidden;
+    margin: auto;
     
 }
 
@@ -178,3 +177,7 @@ p.copyright {
     column-span: all;
 }
 
+.topnav {
+    font-size: 14px;
+    background-color: rgb(248, 248, 248);
+}

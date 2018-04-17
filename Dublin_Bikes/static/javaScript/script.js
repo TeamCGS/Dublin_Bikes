@@ -492,8 +492,6 @@ function weather() {
         _.forEach(weather, function(weather) {
             
             var weatherInfo = "<table id ='weather_table'>";
-            weatherInfo += "<tr><th> Icon </th><th>Description</th><th> Temp Max </th><th>Temp Min</th><th>Humidity</th></tr>";
-            console.log("LOOK HERE : ", weatherInfo)
             var tempMax_temp = weather.temp_max;
             var tempMax_float = tempMax_temp - 273.15; //calculates temp in celsius
             var tempMax = Math.round(tempMax_float);
@@ -505,7 +503,7 @@ function weather() {
             var humidity = weather.humidity;
 
             
-        weatherInfo += "<tr><td>" + "<img src='http://openweathermap.org/img/w/" + iconCode + ".png'>" + "</td><td>" + Descrip + "</td><td>" + tempMax + '°C' + "</td><td>" + tempMin + '°C' + "</td><td>" + humidity + "</td></tr>";
+        weatherInfo += "<tr><td>" + "<img src='http://openweathermap.org/img/w/" + iconCode + ".png'>" + "</td><td>" + Descrip + "</td><td>Max Temp:" + tempMax + '°C' + "</td><td>Min Temp:" + tempMin + '°C' + "</td><td>Humidty: " + humidity + "%</td></tr>";
 
         weatherInfo += "</table>";  
         document.getElementById("weather").innerHTML = weatherInfo;
