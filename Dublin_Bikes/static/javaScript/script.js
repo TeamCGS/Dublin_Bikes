@@ -25,6 +25,9 @@ function myMap() {
     // Try HTML5 geolocation.
     if (navigator.geolocation) { //if the user has enabled geolocation
         navigator.geolocation.getCurrentPosition(function(position) { //gets their current position
+            console.log("reached")
+            console.log(position.coords.latitude)
+            console.log(position.coords.longitude)
             user_pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -56,9 +59,13 @@ function myMap() {
     function handleLocationError(browserHasGeolocation, info_Window, user_pos) {
         document.getElementById('directions').innerHTML = 'Sorry in order to use this feature you need to allow access to your geolocation.\nPlease change this in your browser settings and try again.';
     }
+    
+    
+    
+    
 
-
-
+    
+    
 
     //calls get stations method in views whcih returns the data in json format
     $.getJSON('/stations', null, function(data) {
