@@ -117,6 +117,20 @@ def get_AvailableBikesOccupancy_dataHourly(station_number):
     
     return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
 
+
+@home.route('/modelPredictions', methods=['GET', 'POST']) 
+def modelPredictions():
+    if request.method == 'POST':
+        stationNumber = request.form['station']
+        day = request.form['day'] #string for the day of the week eg. monday
+        time = request.form['time'] #24 hours eg.13 for one o'clock
+        
+        #**************************
+        #predictions code goes here
+        #**************************
+        
+        return render_template('home/index.html', title="Welcome", )#<----put prediction here)
+    
 @home.route('/weather') 
 def get_weather():
     conn = get_db()

@@ -56,8 +56,15 @@ function myMap() {
 
     //calls get stations method in views which returns the data in json format
     $.getJSON('/stations', null, function(data) {
-        //console.log("got json data", data)
-
+        console.log("got json data", data)
+        
+        //code to fill drop down menu for stations
+        var i;
+        var stationHTML = "";
+        for (i = 0; i < data.stations.length; i++) {
+            stationHTML += "<option value="+data.stations[i].number+">"+data.stations[i].name+"</option>";
+        }
+        document.getElementById("stationList").innerHTML=stationHTML;
 
         //Different markers to indicate stations with more available bikes
         var icon = {
@@ -74,7 +81,6 @@ function myMap() {
         if ('stations' in data) {
             var stations = data.stations;
             _.forEach(stations, function(station) {
-
 
                 //if bike has less than 10 bikes in its station then the markre will be red
                 if (station.available_bikes <= 1) {
@@ -156,17 +162,12 @@ function myMap() {
                 //calling the dynamic static data with the current marker 
                 dynamicStationData(this);
                     var x = document.getElementById("day");
-                    var y = document.getElementById("predict");
                     var z = document.getElementById("hour");
                     
                      if ( x.classList.contains('active') ){
                         drawAvailableBikeStandsDaily(this);
                         drawAvailableBikesDaily(this);
                     }
-//                    else if ( y.classList.contains('active') ){
-//                        drawAvailableBikeStandsPredict(this);
-//                        drawAvailableBikesPredict(this);
-//                    }
                     else if ( z.classList.contains('active') ){
                         drawAvailableBikeStandsHourly(this);
                         drawAvailableBikesHourly(this);
@@ -593,6 +594,7 @@ function changeToDayView(){
     if ( y.classList.contains('active') ){
         y.classList.remove('active');
         y.classList.add('deactive');
+        document.getElementById("predictions").style.display="none";
     }
     
     if ( z.classList.contains('active') ){
@@ -600,7 +602,6 @@ function changeToDayView(){
         z.classList.add('deactive');
     }
     
- //   myMap();
 }
 
 
@@ -621,7 +622,11 @@ function changeToHourView(){
         y.classList.add('deactive');
     }
     
- //   myMap();
+     if ( z.classList.contains('active') ){
+        z.classList.remove('active');
+        z.classList.add('deactive');
+        document.getElementById("predictions").style.display="none";
+    }
     
 }
 
@@ -636,6 +641,7 @@ function changeToPredictionView(){
     if ( x.classList.contains('deactive') ){
         x.classList.remove('deactive');
         x.classList.add('active');
+        document.getElementById("predictions").style.display="block";
     }
     
     if ( y.classList.contains('active') ){
@@ -647,8 +653,6 @@ function changeToPredictionView(){
         z.classList.remove('active');
         z.classList.add('deactive');
     }
-    
-//    myMap();
     
 }
 
