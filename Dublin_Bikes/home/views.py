@@ -3,6 +3,10 @@ from . import home
 from sqlalchemy import create_engine
 import pandas as pd
 import json
+from pandas.core.datetools import day
+from flask import request
+import pickle
+import os
 
 def connect_to_database():
         engine = create_engine('mysql+mysqlconnector://CGSdatabase:password@dublinbikes.ctaptplk7c5t.eu-west-1.rds.amazonaws.com/dublinbikes', convert_unicode=True)
@@ -129,18 +133,27 @@ def modelPredictions():
         params = {"day": day,
                   "time": time}
         sql = '''
-                SELECT * FROM dublinbikes.weather_prediction
+                SELECT temp, rain 
+                FROM dublinbikes.weather_prediction
                 WHERE day_num = {day}
                 AND hour = {time};
             '''.format(**params)
             
         df = pd.read_sql_query(sql, conn)
+        df.insert(0, 'number', stationNumber)
+        df.insert(1, 'Day', day)
+        df.insert(2, 'Hour', time)
         
-        #**************************
-        #predictions code goes here
-        #**************************
+        my_dir = os.path.dirname('model')
+        pickle_file_path = os.path.join(my_dir, 'model.p')
         
-        return render_template('home/index.html', title="Welcome", )#<----put prediction here)
+        model = pickle.load( open( pickle_file_path, "rb" ) )
+        
+        prediction = model.predict(df)
+                
+        print(prediction)
+        
+        return render_template('home/index.html', title="Welcome"), prediction#<----put prediction here
     
 @home.route('/weather') 
 def get_weather():
