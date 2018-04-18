@@ -121,9 +121,20 @@ def get_AvailableBikesOccupancy_dataHourly(station_number):
 @home.route('/modelPredictions', methods=['GET', 'POST']) 
 def modelPredictions():
     if request.method == 'POST':
-        stationNumber = request.form['station']
-        day = request.form['day'] #string for the day of the week eg. monday
-        time = request.form['time'] #24 hours eg.13 for one o'clock
+        stationNumber = int(request.form['station'])
+        day = int(request.form['day']) #string for the day of the week eg. monday
+        time = int(request.form['time']) #24 hours eg.13 for one o'clock
+        
+        conn = get_db()
+        params = {"day": day,
+                  "time": time}
+        sql = '''
+                SELECT * FROM dublinbikes.weather_prediction
+                WHERE day_num = {day}
+                AND hour = {time};
+            '''.format(**params)
+            
+        df = pd.read_sql_query(sql, conn)
         
         #**************************
         #predictions code goes here
