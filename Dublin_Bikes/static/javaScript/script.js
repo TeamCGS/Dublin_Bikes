@@ -1,16 +1,8 @@
-//Function to create map and lister on markers to call functions to draw charts
-var user_pos; //varible to hold users geolocaiton
-var info_Window;
-var map; //map varible
-var show_direction_button; //used to indicate if user has enabled geolocation or not.
-
-
-
 function myMap() {
 
     var mapProp = {
-        center: new google.maps.LatLng(53.34745126358793, -6.259031293276394),
-        zoom: 13.4,
+        center: new google.maps.LatLng(53.34745126358793, -6.259031293276394), 
+        zoom: 13.8,
     };
     map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
@@ -18,16 +10,13 @@ function myMap() {
         directionsDisplay = new google.maps.DirectionsRenderer({ //displays the directions
             map: map,
             panel: document.getElementById('directions'), //this is div where directions will be diaplyed 
-            preserveViewport: false //prevents zoom out when directions started
+            preserveViewport: true //prevents zoom out when directions started
         });
 
 
     // Try HTML5 geolocation.
     if (navigator.geolocation) { //if the user has enabled geolocation
         navigator.geolocation.getCurrentPosition(function(position) { //gets their current position
-            console.log("reached")
-            console.log(position.coords.latitude)
-            console.log(position.coords.longitude)
             user_pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -64,10 +53,8 @@ function myMap() {
     
     
 
-    
-    
 
-    //calls get stations method in views whcih returns the data in json format
+    //calls get stations method in views which returns the data in json format
     $.getJSON('/stations', null, function(data) {
         //console.log("got json data", data)
 
@@ -82,10 +69,10 @@ function myMap() {
         var icon2 = {
             url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
         };
+        
 
         if ('stations' in data) {
             var stations = data.stations;
-            //console.log(JSON.parse(JSON.stringify(stations)));
             _.forEach(stations, function(station) {
 
 
@@ -133,33 +120,41 @@ function myMap() {
                     });
 
                 }
+                //add the markers to the markers_Array(stores the objects)
+                marker_array.push(marker); 
                 
-                
-                //adding a listerner funtion the markers. will activate another function on click
-                marker.addListener("click", function() {
-                    
-                    
+                //as I add makers to the array it gives its index by the length of the current array -1. ie the first station has index 0
+                options += '<a href="javascript:myclick(' + (marker_array.length-1) + ')">' + station.name + '<\/a><br>';
 
-
+               
+        //adding a listerner funtion the markers. will activate another function on click
+        marker.addListener("click", function() {
+                    
+                    //the code below is executed when the marker is clicked.
+                    document.getElementById('directions').style.display = 'none';
                     directionsDisplay.setMap(null); //hiding blue directions line if its already there
                     directionsDisplay.setPanel(null); //hide directions list if alreay there    
                     //map.setZoom(15); //zoom in on marker when clicked
                     //map.setCenter(marker.getPosition()); //map zoom supon click
                     
                     
+                    //if the marker has an animation then stop it 
                     if (marker.getAnimation() != null) {
                         marker.setAnimation(null);
                       } 
+                    //otherwise make it bounce
                     else {
                         marker.setAnimation(google.maps.Animation.BOUNCE);
                       }
                     
+                    //timer for the marker bounce
                     setTimeout(function() {
                         marker.setAnimation(null)
                     }, 3000);
                     
-                    dynamicStationData(this);
                     
+                //calling the dynamic static data with the current marker 
+                dynamicStationData(this);
                     var x = document.getElementById("day");
                     var y = document.getElementById("predict");
                     var z = document.getElementById("hour");
@@ -180,11 +175,35 @@ function myMap() {
                 })
             })
 
+        }           
+        //this fills the div that contains the list of stations(div appears with click of a button)
+        document.getElementById("stations_text").innerHTML = options;
 
-        }
     })
 
 }
+
+
+
+
+//when the station name in the drop down is clicked this function is called and it triggers the click of a marker
+function myclick(i) {
+  google.maps.event.trigger(marker_array[i], "click");
+}
+
+
+
+
+
+
+//this function shows the list of the stations in the drop down when the stations button is clicked
+function showStationsList(){
+            document.getElementById('directions').style.display = 'none';
+            document.getElementById('googleMap').style.width = '85%';
+            document.getElementById('stations_list').style.display = 'inline-block';
+            stations_window = true;
+}
+
 
 
 
@@ -199,7 +218,8 @@ function dynamicStationData(marker) {
                 }
         
                 //closes directions div if open when clicking on a new marker
-                if (directionsWindow) {
+        //need to fix this diections div but im going to bed ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                if (directionsWindow && !stations_window) { 
                     document.getElementById('directions').style.display = 'none';
                     document.getElementById('googleMap').style.width = '100%';
                 }
@@ -208,10 +228,11 @@ function dynamicStationData(marker) {
         if ('stations' in data) {
             var dynamicData = data.stations
             var infowindow = new google.maps.InfoWindow();
-            prev_info_window = infowindow;
+            prev_info_window = infowindow; //this is needed so the info window can be closed above.
 
 
-            //               Wehave a scraper issue atm. Will be fixed by tuesday
+            // We have a scraper issue atm. Will be fixed by tuesday
+            //this code changes the banking to no or yes
             if (dynamicData[0].banking == 0) {
                 var banking = "No";
 
@@ -219,28 +240,26 @@ function dynamicStationData(marker) {
                 var banking = "Yes";
 
             };
-
+            
+            //
             var contentString = '<div id="content" class="stationInfoTitle"><h2 class="stationTitle">' + marker.title + '</h2><ul class="bikeInfo"><li>Available Bike Stands: ' + dynamicData[0].available_bike_stands + '</li><li>Available Bikes: ' + dynamicData[0].available_bikes + '</li><li>Banking Available: ' + banking + '</li><li>Number of Bike Stands: ' + dynamicData[0].bike_stands + '</li><li><div id="geo"><input type="button" id="nodeGoto" value="Click Here for Directions"/></div></li></ul></div>';
             
-                //only shows the directions button if the user has enabled geolocation.
-
             
+            
+            //only shows the directions button if the user has enabled geolocation.
             infowindow.setContent(contentString);
             infowindow.open(marker.map, marker);
             
-                if (show_direction_button != false) {
+                if (show_direction_button != false) { //global variable
                 document.getElementById('geo').style.display = 'inline-block';
             }
-
-            //using a div instead of a info_window to display current information.
-            //document.getElementById("test").innerHTML = contentString;
-
-            
 
 
             // this can only happen if the button div is displayed (geolocation enabled)
             document.getElementById("nodeGoto").addEventListener("click", function() {
-                document.getElementById('googleMap').style.width = '60%';
+                document.getElementById('stations_list').style.display = 'none';
+                stations_window = false;
+                document.getElementById('googleMap').style.width = '65%';
                 document.getElementById('directions').style.display = 'inline-block';
                 directionsWindow = true;
                 Directions(marker);
@@ -249,6 +268,9 @@ function dynamicStationData(marker) {
         }
     })
 }
+
+
+
 
 
 
@@ -283,6 +305,8 @@ function Directions(m) {
 
 
 
+
+
 //function to draw chart
 function drawAvailableBikeStandsDaily(marker) {
     $.getJSON("/occupancyOfAvailableBikeStandsDaily/" + marker.station_number, function(data) {
@@ -294,7 +318,7 @@ function drawAvailableBikeStandsDaily(marker) {
         //            x.style.display = "block";
         //        }
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('graphs'));
+        var chart = new google.visualization.LineChart(document.getElementById('graphs'));
 
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn('datetime', 'Time of Day');
@@ -326,6 +350,9 @@ function drawAvailableBikeStandsDaily(marker) {
     })
 }
 
+
+
+
 //function to draw chart
 function drawAvailableBikeStandsHourly(marker) {
     $.getJSON("/occupancyOfAvailableBikeStandsHourly/" + marker.station_number, function(data) {
@@ -337,7 +364,7 @@ function drawAvailableBikeStandsHourly(marker) {
         //            x.style.display = "block";
         //        }
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('graphs'));
+        var chart = new google.visualization.LineChart(document.getElementById('graphs'));
 
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn('datetime', 'Time of Day');
@@ -371,6 +398,9 @@ function drawAvailableBikeStandsHourly(marker) {
 
 
 
+
+
+
 //function to draw chart
 function drawAvailableBikesDaily(marker) {
     $.getJSON("/occupancyOfAvailableBikesDaily/" + marker.station_number, function(data) {
@@ -382,7 +412,7 @@ function drawAvailableBikesDaily(marker) {
         //            x.style.display = "block";
         //        }
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('graphs2'));
+        var chart = new google.visualization.LineChart(document.getElementById('graphs2'));
 
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn('datetime', 'Time of Day');
@@ -415,6 +445,9 @@ function drawAvailableBikesDaily(marker) {
 }
 
 
+
+
+
 //function to draw chart
 function drawAvailableBikesHourly(marker) {
     $.getJSON("/occupancyOfAvailableBikesHourly/" + marker.station_number, function(data) {
@@ -426,7 +459,7 @@ function drawAvailableBikesHourly(marker) {
         //            x.style.display = "block";
         //        }
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('graphs2'));
+        var chart = new google.visualization.LineChart(document.getElementById('graphs2'));
 
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn('datetime', 'Time of Day');
@@ -460,6 +493,9 @@ function drawAvailableBikesHourly(marker) {
 
 
 
+
+
+
 //function to close charts div
 function closeCharts() {
     var x = document.getElementById("chartsDiv");
@@ -474,10 +510,13 @@ function closeCharts() {
 
 
 
+
 //function to display information message upon loading page
 function codeAddress() {
     alert('Welcome to DublinBikes. This web application is designed to provde you with real time information on DublinBikes, such as, the current number of bikes at a given station and the number of available bike stands at a station. We also provie you with predictions for the number of bikes available for a given day. Enjoy.\n\n To continue please hit CLOSE below ');
 }
+
+
 
 
 
@@ -513,6 +552,8 @@ function weather() {
 }
 
 
+
+
 function displayWeather(){
     var x = document.getElementById("weather");
     if (x.style.display==="none"){
@@ -522,6 +563,9 @@ function displayWeather(){
         x.style.display="none";
     }
 }
+
+
+
 
 function toggleMyNavBar(){
     var x = document.getElementById("myNav");
@@ -533,6 +577,8 @@ function toggleMyNavBar(){
         
     }
 }
+
+
 
 function changeToDayView(){
     var x = document.getElementById("day");
@@ -554,8 +600,11 @@ function changeToDayView(){
         z.classList.add('deactive');
     }
     
-    myMap();
+ //   myMap();
 }
+
+
+
 
 function changeToHourView(){
     var y = document.getElementById("day");
@@ -572,9 +621,12 @@ function changeToHourView(){
         y.classList.add('deactive');
     }
     
-    myMap();
+ //   myMap();
     
 }
+
+
+
 
 function changeToPredictionView(){
     var y = document.getElementById("day");
@@ -600,6 +652,16 @@ function changeToPredictionView(){
     
 }
 
+
+
+//Function to create map and lister on markers to call functions to draw charts
+var stations_window = false; //stations window
+var user_pos; //varible to hold users geolocaiton
+var info_Window;
+var map; //map varible
+var show_direction_button; //used to indicate if user has enabled geolocation or not.
+var marker_array=[]; //array used to store all the marker objects
+var options = ""; // this is used to created the stations list 
 var prev_info_window = false;//used to toggle open/close info_window when clicking on different markers
 var directionsWindow = false;//used to toggle open/close directions when clicking on different markers
 

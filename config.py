@@ -6,7 +6,7 @@ class Config(object):
     # Put any configurations here that are common across all environments
     DEBUG_TB_ENABLED = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-    CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
+    CACHE_TYPE = 'null'  # Can be "memcached", "redis", etc.
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
