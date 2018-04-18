@@ -30,6 +30,7 @@ class Weather(weather_base):
     weekend = Column(String(100),nullable = False)
     hour = Column(String(100),nullable=False)
     day_num =Column(String(100),nullable = False)
+    rain = Column(Integer,nullable = False)
     timeDate = Column(String (100), primary_key=True, nullable=False)
     
     
@@ -51,7 +52,6 @@ class Weather(weather_base):
                 #pprint(data)
                 
                 self.writeToDatabase(weather_engine_pred,talk_session,data)
-                print("returned")
                 time.sleep(180*60)
                 
             except:
@@ -62,15 +62,16 @@ class Weather(weather_base):
         return
          
     def writeToDatabase(self, weather_engine_pred, talk_session, data):
-  
         self.data = data
         weather_engine_pred.execute("TRUNCATE TABLE dublinbikes.weather_prediction")
         weekdays = ["Monday","Tuesday","Wednesday","Thursday","Friday"]
  
         for i in self.data["list"]: 
-            
             weekday_1 = "0"
             weekend_1 = "0"
+            
+            rain = 0
+            
             now = datetime.datetime.now()
              
             date = i["dt"]
@@ -82,6 +83,21 @@ class Weather(weather_base):
                 weekday_1 ="1"
             else:
                 weekend_1 ="1"
+            
+                
+            description=i["weather"][0]["description"]
+       
+            if description == "light intensity drizzle" \
+                or description == "light intensity drizzle rain" \
+                or description == "light intensity shower rain" \
+                or description == "light rain" \
+                or description == "shower rain":
+                rain = 1
+             
+            else:
+                rain = 0
+             
+             
              
        
             weather = Weather(humidity=i["main"]["humidity"],
@@ -96,10 +112,11 @@ class Weather(weather_base):
                                           weekend = weekend_1,
                                           hour=hour,
                                           day_num =day_decimal,
+                                          rain = rain,
                                           timeDate=str(now))
                                             
                                       
-           
+         
             talk_session.add(weather)
             talk_session.commit()
                
