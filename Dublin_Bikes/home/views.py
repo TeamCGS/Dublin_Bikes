@@ -39,6 +39,17 @@ def get_stations():
     return jsonify(stations=stations)
 
 
+@home.route('/forcast') 
+def get_forcast(): 
+    conn = get_db()
+    sql = "SELECT DISTINCT day FROM weather_prediction;"
+    rows = conn.execute(sql).fetchall()
+    days = []
+    for row in rows:
+        days.append(dict(row))
+    return jsonify(days=days)
+
+
 
 
 @home.route('/station_availability/<station_number>') 

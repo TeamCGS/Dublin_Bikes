@@ -65,6 +65,7 @@ function myMap() {
             stationHTML += "<option value="+data.stations[i].number+">"+data.stations[i].name+"</option>";
         }
         document.getElementById("stationList").innerHTML=stationHTML;
+        makeDayDropdown();
 
         //Different markers to indicate stations with more available bikes
         var icon = {
@@ -185,6 +186,30 @@ function myMap() {
 }
 
 
+function makeDayDropdown(){
+    $.getJSON('/forcast', null, function(data){
+        console.log("day data", data)
+        var drop_days = "";
+        console.log(data.days.length)
+            for (i = 0; i < data.days.length; i++) {
+            drop_days += "<option value="+data.days[i].day+">"+data.days[i].day+"</option>";
+        }
+        document.getElementById("days").innerHTML=drop_days;
+    }
+)}
+
+
+//$.getJSON('/stations', null, function(data) {
+//        console.log("got json data", data)
+//        
+//        //code to fill drop down menu for stations
+//        var i;
+//        var stationHTML = "";
+//        for (i = 0; i < data.stations.length; i++) {
+//            stationHTML += "<option value="+data.stations[i].number+">"+data.stations[i].name+"</option>";
+//        }
+//        document.getElementById("stationList").innerHTML=stationHTML;
+//        makeDayDropdown();
 
 
 //when the station name in the drop down is clicked this function is called and it triggers the click of a marker
