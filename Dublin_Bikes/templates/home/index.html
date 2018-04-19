@@ -29,13 +29,13 @@
     </div>
      <div id="predictions" class="predictions">
         <form method="POST" action="/modelPredictions">
-            <div class="form-group">
-                <h3>Select a Station</h3>
+            <div class="form-group dropDowns" id="row1">
+                <h3>Station</h3>
                 <select name="station" id="stationList">
                 </select>
             </div>
-            <div class="form-group">
-                <h3>Select a Day</h3>
+            <div class="form-group dropDowns" id="row2">
+                <h3>Day</h3>
                 <select name="day" id="days">
                 <!--  <option value="1">Monday</option>
                   <option value="2">Tuesday</option>
@@ -46,8 +46,8 @@
                   <option value="7">Sunday</option> -->
                 </select>
             </div>
-            <div class="form-group">
-                <h3>Select a Time</h3>
+            <div class="form-group dropDowns" id="row3">
+                <h3>Time</h3>
                 <select name="time">
                   <option value="00">00</option>
                   <option value="01">01</option>
@@ -75,7 +75,7 @@
                   <option value="23">23</option>
                 </select>
             </div>
-            <input class="btn btn-primary" type="submit" value="submit">
+            <input class="btn btn-primary submitButton" type="submit" value="submit">
         </form>
      </div>
     <div class="chartsContainer2">
