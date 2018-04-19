@@ -7,6 +7,7 @@ from pandas.core.datetools import day
 from flask import request
 import pickle
 import os
+from sklearn.externals import joblib
 
 def connect_to_database():
         engine = create_engine('mysql+mysqlconnector://CGSdatabase:password@dublinbikes.ctaptplk7c5t.eu-west-1.rds.amazonaws.com/dublinbikes', convert_unicode=True)
@@ -42,7 +43,7 @@ def get_stations():
 @home.route('/forcast') 
 def get_forcast(): 
     conn = get_db()
-    sql = "SELECT DISTINCT day FROM weather_prediction;"
+    sql = "SELECT DISTINCT day, day_num FROM weather_prediction;"
     rows = conn.execute(sql).fetchall()
     days = []
     for row in rows:
@@ -102,13 +103,15 @@ def get_AvailableBikeStandsOccupancy_dataHourly(station_number):
 def get_AvailableBikesOccupancy_dataDaily(station_number):
     conn = get_db()
     params = {"number": station_number}
-    sql = '''
+    sql_1 = '''
        select timeDate, available_bikes
        from JoinedTable
        where number = {number}
        order by timeDate
    '''.format(**params)
-    df = pd.read_sql_query(sql, conn)
+    #print("ooc", sql_1)
+    df = pd.read_sql_query(sql_1, conn)
+    #print("++++++++", df)
     df['last_update_date'] = pd.to_datetime(df.timeDate, format='%Y-%m-%d %H:%M:%S.%f')
     df.set_index('last_update_date', inplace=True)
     res = df['available_bikes'].resample('1d').mean()
@@ -126,6 +129,7 @@ def get_AvailableBikesOccupancy_dataHourly(station_number):
        order by timeDate
    '''.format(**params)
     df = pd.read_sql_query(sql, conn)
+    
     df['last_update_date'] = pd.to_datetime(df.timeDate, format='%Y-%m-%d %H:%M:%S.%f')
     df.set_index('last_update_date', inplace=True)
     res = df['available_bikes'].resample('1h').mean()
@@ -135,37 +139,42 @@ def get_AvailableBikesOccupancy_dataHourly(station_number):
 
 @home.route('/modelPredictions', methods=['GET', 'POST']) 
 def modelPredictions():
-    if request.method == 'POST':
+    #if request.method == 'POST':
         stationNumber = int(request.form['station'])
         day = int(request.form['day']) #string for the day of the week eg. monday
         time = int(request.form['time']) #24 hours eg.13 for one o'clock
         
-        conn = get_db()
         params = {"day": day,
-                  "time": time}
+                  "time":time}
+        
+        print("day is:",day)
+        print("time is:",time)
+        conn = get_db()
+#
         sql = '''
                 SELECT temp, rain 
                 FROM dublinbikes.weather_prediction
-                WHERE day_num = {day}
-                AND hour = {time};
+                WHERE day_num = {day} AND hour = {time};
             '''.format(**params)
             
+        print("sql is:",sql)
         df = pd.read_sql_query(sql, conn)
-        df.insert(0, 'number', stationNumber)
-        df.insert(1, 'Day', day)
-        df.insert(2, 'Hour', time)
+        print("................",df)
+        df.insert(0,'station_number', stationNumber)
+        df.insert(1,'day', day)
+        df.insert(2,'time', time)
         
-        my_dir = os.path.dirname('model')
-        pickle_file_path = os.path.join(my_dir, 'model.p')
-        
-        model = pickle.load( open( pickle_file_path, "rb" ) )
-        
+        print(df)
+            
+        model = joblib.load('../Dublin_Bikes/Dublin_Bikes/home/model.p')
+        print("model is:",model)
+
         prediction = model.predict(df)
-                
-        print(prediction)
-        
-        return render_template('home/index.html', title="Welcome"), prediction#<----put prediction here
-    
+        rounded_prediction = int(round(prediction[0]))
+        print(rounded_prediction)
+        return jsonify(rounded_prediction)
+#        return render_template('home/.html', title="Welcome"),rounded_prediction#<----put prediction here
+#        return rounded_prediction
 @home.route('/weather') 
 def get_weather():
     conn = get_db()
