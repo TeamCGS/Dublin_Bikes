@@ -1,6 +1,7 @@
 body, html {
     width: 100%;
     height: 100%;
+    background-color: rgb(85, 88, 94);
 }
 
 body, h1, h2, h3 {
@@ -9,21 +10,23 @@ body, h1, h2, h3 {
 }
 
 a, .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
-  color: #aec251; 
+  color: white; 
 }
 
 a:hover, .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {
-  color: #687430; 
+  color: rgb(45, 46, 47); 
 }
 
 footer {
     padding: 50px 0;
-    background-color: #f8f8f8;
+    background-color: rgb(85, 88, 94);
     overflow: inline-block;
+    border-top: 2px solid white;
 }
 
 p.copyright {
     margin: 15px 0 0;
+    color: white;
 }
 
 .alert-info {
@@ -82,10 +85,7 @@ p.copyright {
     display: none;
     margin: 0;
     padding: 0;
-    background: #83a4d4;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #b6fbff, #83a4d4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    background-color: white;
 }
 
 .chartsContainer2{
@@ -135,7 +135,9 @@ label {
     display: none;
     float: left;
     overflow-y:scroll;
-    overflow-x: scroll;}
+    overflow-x: scroll;
+    background-color: #cdd3d9;
+}
 
 #stations_text{
     padding-left: 20px;
@@ -146,7 +148,7 @@ label {
     padding: 0;
     border: none;
     background: none;
-    color: #aec251;
+    color: #3b3a36;
     padding-top: 15px;
 }
     
@@ -165,9 +167,8 @@ label {
 #weather{
     display: none;
     justify-content: center;
-    background-color: rgb(174, 219, 240);
+    background-color: rgb(104, 107, 114);
     padding-top: 15px;
-    border-bottom: 2px solid rgb(166, 200, 59);
 }
 #directions{
     width: 35%;
@@ -176,12 +177,14 @@ label {
     float: right;
     overflow:scroll;
     margin-top: 40px;
+    background-color: white;
 }
 
 #weather_table{
     
     align-self: center;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: white;
     border-collapse: collapse;
     width: 50%;
     overflow: hidden;
@@ -204,9 +207,13 @@ label {
     column-span: all;
 }
 
+.navbar {
+    border-bottom: 2px solid white;
+}
+
 .topnav {
     font-size: 14px;
-    background-color: rgb(248, 248, 248);
+    background-color: rgb(85, 88, 94);
 }
 
 .predictions {
@@ -214,6 +221,7 @@ label {
 }
 
 .submitButton {
+    font-size: 25px;
     width: 100%;
     height: 110px;
     display: block;
@@ -256,4 +264,12 @@ form{
 
 h3 {
     color: white;
+}
+
+#stations_button {
+    color: white;
+}
+
+#stations_button:hover {
+    color: rgb(45, 46, 47); 
 }
