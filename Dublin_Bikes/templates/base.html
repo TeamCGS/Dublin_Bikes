@@ -29,13 +29,15 @@
        
           <div class="collapse navbar-collapse myNavBar" id="myNav">
                <ul class="nav navbar-nav navbar-right">
-                 <li><a href="javascript:displayWeather()" id="toggle">Weather</a></li>
+                 <li><a href="javascript:displayWeather()">Weather</a></li>
                    <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
+                   <li><p>{{predictionValue}}</p></li>
                </ul>
            </div>
         </div>
         <div id="weather"></div>
     </nav>
+    <div class="answer" id="answer" onload="displayPredictions({{predictionValue}})"><h2></h2></div>
     
       {% block body %}
       {% endblock %}

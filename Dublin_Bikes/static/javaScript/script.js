@@ -64,7 +64,7 @@ function myMap() {
         for (i = 0; i < data.stations.length; i++) {
             stationHTML += "<option value="+data.stations[i].number+">"+data.stations[i].name+"</option>";
         }
-        document.getElementById("stationList").innerHTML=stationHTML;
+        document.getElementById("predictionStation").innerHTML=stationHTML;
         makeDayDropdown();
 
         //Different markers to indicate stations with more available bikes
@@ -186,13 +186,45 @@ function myMap() {
 }
 
 
+
+//ajax function that displays the prediction of number of bikes
+$(document).ready(function() {
+    $('#submit_button').click(function(event) {
+        $.ajax({
+            
+            data: ({
+                days : $('#days').val(),
+                time : $('#time').val(),
+                predictionStation : $('#predictionStation').val()   
+            }),
+            type : 'POST',
+            url : '/modelPredictions'
+        }).done(function(result) {
+            if (result.error){
+                console.log("error")
+
+            }
+            else{
+                document.getElementById('result_container').style = "inline-block";
+                document.getElementById('result').innerHTML = result;
+
+            }});
+
+        event.preventDefault();
+        });
+        });
+
+
+
+
+
+
+
+
 function makeDayDropdown(){
     $.getJSON('/forcast', null, function(data){
-        console.log("day data", data)
         var drop_days = "";
-        console.log(data.days.length)
             for (i = 0; i < data.days.length; i++) {
-            console.log(data.days[i].day_num)
             drop_days += "<option value="+data.days[i].day_num+">"+data.days[i].day+"</option>";
         }
         document.getElementById("days").innerHTML=drop_days;
@@ -213,10 +245,18 @@ function myclick(i) {
 
 //this function shows the list of the stations in the drop down when the stations button is clicked
 function showStationsList(){
+    
+    if (stations_window){
+        document.getElementById('stations_list').style.display = 'none';
+        document.getElementById('googleMap').style.width = '100%';
+        stations_window = false;
+    }
+    else{
             document.getElementById('directions').style.display = 'none';
             document.getElementById('googleMap').style.width = '85%';
             document.getElementById('stations_list').style.display = 'inline-block';
             stations_window = true;
+    }
 }
 
 
@@ -571,11 +611,14 @@ function weather() {
 
 function displayWeather(){
     var x = document.getElementById("weather");
-    if (x.style.display==="none"){
+    if (toggleWeather == false){
         x.style.display="flex";
+        toggleWeather = true;
+        
     }
     else{
         x.style.display="none";
+        toggleWeather = false;
     }
 }
 
@@ -671,8 +714,18 @@ function changeToPredictionView(){
 }
 
 
+function displayPredictions(value) {
+    if (value == null){
+    }
+    else{
+        alert(value)
+    }
+}
+
+
 
 //Function to create map and lister on markers to call functions to draw charts
+var toggleWeather =false;
 var stations_window = false; //stations window
 var user_pos; //varible to hold users geolocaiton
 var info_Window;
@@ -684,10 +737,11 @@ var prev_info_window = false;//used to toggle open/close info_window when clicki
 var directionsWindow = false;//used to toggle open/close directions when clicking on different markers
 
 window.onload = codeAddress;
+
 weather()
 
-var toggle = document.getElementById('toggle');
-toggle.onclick = displayWeather;
+//var toggle = document.getElementById('toggle');
+//toggle.onclick = displayWeather;
 //Updates weather info over time
 setInterval(function() {
     weather()

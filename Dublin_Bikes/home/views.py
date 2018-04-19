@@ -8,6 +8,7 @@ from flask import request
 import pickle
 import os
 from sklearn.externals import joblib
+from _pydecimal import Rounded
 
 def connect_to_database():
         engine = create_engine('mysql+mysqlconnector://CGSdatabase:password@dublinbikes.ctaptplk7c5t.eu-west-1.rds.amazonaws.com/dublinbikes', convert_unicode=True)
@@ -137,44 +138,67 @@ def get_AvailableBikesOccupancy_dataHourly(station_number):
     return jsonify(data=json.dumps(list(zip(map(lambda x:x.isoformat(), res.index), res.values))))
 
 
-@home.route('/modelPredictions', methods=['GET', 'POST']) 
+@home.route('/modelPredictions', methods=['POST']) 
 def modelPredictions():
-    #if request.method == 'POST':
-        stationNumber = int(request.form['station'])
-        day = int(request.form['day']) #string for the day of the week eg. monday
-        time = int(request.form['time']) #24 hours eg.13 for one o'clock
+
+    if request.method == 'POST':
+        #print("entered post")
+
         
+
+        predictionStation = int(request.form['predictionStation'])
+        #print("station:", predictionStation)
+        day = int(request.form['days']) #string for the day of the week eg. monday
+        #print("day", day)
+        time = int(request.form['time']) #24 hours eg.13 for one o'clock
+        #print("time", time)
+        
+        if 0 < time < 4:
+            time = 3
+        elif 3 < time < 7:
+            time = 6
+        elif 6 < time < 10:
+            time = 9
+        elif 9 < time < 13:
+            time = 12
+        elif 12 < time < 16:
+            time = 15
+        elif 15 < time < 19:
+            time = 18
+        elif 18 < time < 22:
+            time = 21
+        else:
+            time = 0
+            
         params = {"day": day,
                   "time":time}
-        
-        print("day is:",day)
-        print("time is:",time)
+          
         conn = get_db()
-#
+    #
         sql = '''
                 SELECT temp, rain 
                 FROM dublinbikes.weather_prediction
                 WHERE day_num = {day} AND hour = {time};
             '''.format(**params)
-            
-        print("sql is:",sql)
+              
+        #print("sql is:",sql)
         df = pd.read_sql_query(sql, conn)
-        print("................",df)
-        df.insert(0,'station_number', stationNumber)
+        #print("................",df)
+        df.insert(0,'station_number', predictionStation)
         df.insert(1,'day', day)
         df.insert(2,'time', time)
-        
-        print(df)
-            
+          
+        #print(df)
+              
         model = joblib.load('../Dublin_Bikes/Dublin_Bikes/home/model.p')
-        print("model is:",model)
-
+        #print("model is:",model)
+      
         prediction = model.predict(df)
-        rounded_prediction = int(round(prediction[0]))
-        print(rounded_prediction)
+        rounded_prediction = int(round(prediction[0]))        
         return jsonify(rounded_prediction)
-#        return render_template('home/.html', title="Welcome"),rounded_prediction#<----put prediction here
-#        return rounded_prediction
+
+      
+
 @home.route('/weather') 
 def get_weather():
     conn = get_db()
@@ -182,6 +206,6 @@ def get_weather():
     rows = conn.execute(sql).fetchall()
     weather = []
     for row in rows:
-        print(row)
+        #print(row)
         weather.append(dict(row))
     return jsonify(weather=weather)
