@@ -142,17 +142,12 @@ def get_AvailableBikesOccupancy_dataHourly(station_number):
 def modelPredictions():
 
     if request.method == 'POST':
-        #print("entered post")
-
-        
 
         predictionStation = int(request.form['predictionStation'])
-        #print("station:", predictionStation)
         day = int(request.form['days']) #string for the day of the week eg. monday
-        #print("day", day)
         time = int(request.form['time']) #24 hours eg.13 for one o'clock
-        #print("time", time)
-        
+
+       #this is needed as weather is only collected in hours of 3 
         if 0 < time < 4:
             time = 3
         elif 3 < time < 7:
@@ -171,31 +166,25 @@ def modelPredictions():
             time = 0
             
         params = {"day": day,
-                  "time":time}
-          
+                  "time":time} 
         conn = get_db()
-    #
+    
         sql = '''
                 SELECT temp, rain 
                 FROM dublinbikes.weather_prediction
                 WHERE day_num = {day} AND hour = {time};
             '''.format(**params)
               
-        #print("sql is:",sql)
         df = pd.read_sql_query(sql, conn)
-        #print("................",df)
         df.insert(0,'station_number', predictionStation)
         df.insert(1,'day', day)
         df.insert(2,'time', time)
-          
-        #print(df)
-              
-        model = joblib.load('../Dublin_Bikes/Dublin_Bikes/home/model.p')
-        #print("model is:",model)
-      
+                        
+        model = joblib.load('../Dublin_Bikes/Dublin_Bikes/home/model.p') #loading in the model from the file system
+
         prediction = model.predict(df)
         rounded_prediction = int(round(prediction[0]))        
-        return jsonify(rounded_prediction)
+        return jsonify(rounded_prediction) #reuturned to Ajax function
 
       
 

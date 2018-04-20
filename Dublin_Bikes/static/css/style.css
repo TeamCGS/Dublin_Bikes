@@ -259,11 +259,13 @@ form{
 }
 /********** CHANGED *************/
 #submit_button {
-    background-color: rgb(119, 119, 119);
+    background-color: rgb(85, 88, 94);
     color: white;
     width: 100%;
     font-size: 25px;
     padding: 2%;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
 }
 
 #submit_button:hover {
@@ -272,6 +274,8 @@ form{
     width: 100%;
     font-size: 25px;
     padding: 2%;
+    border-top: 2px solid white;
+    box-shadow: 
 }
 /********** CHANGED *************/
 #result_container {
