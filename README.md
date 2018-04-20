@@ -2,37 +2,34 @@ Dublin Bikes
 ===============================
 
 version number: 0.0.1
-author: Gavin Fitzgerald
+author: Gavin Fitzgerald, Colin Caraher, Seán O'Connor
 
 Overview
 --------
 
- Python package for displaying dublin bikes information.
- 
-Set Environment Variable
--------
-export FLASK_APP=run.py
+The purpose of this project is to design a Web Application using the Flask Framework in order to assist Dublin Bikes users to find the best station to start a journey and where to return a bike based on where there are spaces available.
 
 
 Installation / Usage
 --------------------
 
-To install use pip:
-
-    $ pip install Dublin_Bikes
-
-
-Or clone the repo:
+Clone the repo:
 
     $ git clone https://github.com/GavinFitzgerald94/Dublin_Bikes.git
     $ python setup.py install
     
-Contributing
-------------
+To install use pip:
 
-TBD
-
-Example
+    $ pip install Dublin_Bikes
+    
+To Run
 -------
 
-TBD
+Navigate to Dublin bikes directory and run the following command:
+
+python run.py
+
+License
+-------
+
+GNU General Public License v3.0
