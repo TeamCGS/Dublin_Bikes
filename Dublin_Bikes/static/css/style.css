@@ -234,6 +234,8 @@ label {
 
 form{
     text-align: center;
+    background: #ffffff url(../img/dublinbikes.jpg) no-repeat right top;/********** CHANGED *************/
+    background-size: cover;
 }
 
 .dropDowns {
@@ -242,32 +244,45 @@ form{
     margin: 0;
 }
 
-/* Got code for CSS for gradients from https://uigradients.com */
+/********** CHANGED *************/
 #row1 {
-    background: #B2FEFA;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #0ED2F7, #B2FEFA);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #0ED2F7, #B2FEFA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-color: rgba(74, 74, 74, 0.5);
 }
-
+/********** CHANGED *************/
 #row2 {
-    background: #11998e;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #38ef7d, #11998e);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #38ef7d, #11998e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-color: rgba(74, 74, 74, 0.5);
 
 }
-
+/********** CHANGED *************/
 #row3 {
-    background: #fc4a1a;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #f7b733, #fc4a1a);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-color: rgba(74, 74, 74, 0.5);
+}
+/********** CHANGED *************/
+#submit_button {
+    background-color: rgb(119, 119, 119);
+    color: white;
+    width: 100%;
+    font-size: 25px;
+    padding: 2%;
 }
 
-
+#submit_button:hover {
+    background-color: rgb(0, 149, 225);
+    color: white;
+    width: 100%;
+    font-size: 25px;
+    padding: 2%;
+}
+/********** CHANGED *************/
 #result_container {
-    background: #B2FEFA;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #0ED2F7, #B2FEFA);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #0ED2F7, #B2FEFA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+     background-color: rgba(74, 74, 74, 0.5);
 }
+
+#result {
+    color: white;
+    font-size: 15px;
+}
+
 h3 {
     color: white;
 }

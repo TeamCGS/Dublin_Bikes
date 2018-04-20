@@ -206,7 +206,7 @@ $(document).ready(function() {
             }
             else{
                 document.getElementById('result_container').style = "inline-block";
-                document.getElementById('result').innerHTML = result;
+                document.getElementById('result').innerHTML ="<h3 id='predictedResult'>"+result+"</>";
 
             }});
 
