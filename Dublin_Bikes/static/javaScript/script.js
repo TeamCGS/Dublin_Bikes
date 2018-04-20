@@ -568,7 +568,7 @@ function closeCharts() {
 
 //function to display information message upon loading page
 function codeAddress() {
-    alert('Welcome to DublinBikes. This web application is designed to provde you with real time information on DublinBikes, such as, the current number of bikes at a given station and the number of available bike stands at a station. We also provie you with predictions for the number of bikes available for a given day. Enjoy.\n\n To continue please hit CLOSE below ');
+    alert('     Welcome to DublinBikes. This web application is designed to provde you with real time information on DublinBikes, such as, the current number of bikes at a given station and the number of available bike stands at a station. We also provie you with predictions for the number of bikes available for a given day.\n\n     To get started simply click on a marker or station name to display the station information. Be sure to check out the average number of bikes and stands below. If your planning a trip in the future try our predicted demand feature where we estimate how many bikes are availbe at that station. \n\n Green Marker = 10 or more bikes\nOrange marker = Less than 10\nRed Marker = 1 or no bikes.\nEnjoy.\n\n To continue please hit CLOSE below ');
 }
 
 
