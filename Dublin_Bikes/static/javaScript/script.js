@@ -404,7 +404,7 @@ function drawAvailableBikeStandsHourly(marker) {
     $.getJSON("/occupancyOfAvailableBikeStandsHourly/" + marker.station_number, function(data) {
         data = JSON.parse(data.data);
 
-        var chart = new google.visualization.LineChart(document.getElementById('graphs'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('graphs'));
 
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn('datetime', 'Time of Day');
@@ -485,7 +485,7 @@ function drawAvailableBikesHourly(marker) {
 
         data = JSON.parse(data.data);
 
-        var chart = new google.visualization.LineChart(document.getElementById('graphs2'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('graphs2'));
 
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn('datetime', 'Time of Day');
